@@ -27,13 +27,20 @@
             >To Shopping List</a
           >
         </li>
-        <li><a style="cursor: pointer" (click)="onEditRecipe()">Edit Recipe</a></li>
-        <li><a style="cursor: pointer">Delete Recipe</a></li>
+        <li>
+          <a style="cursor: pointer" (click)="onEditRecipe()">Edit Recipe</a>
+        </li>
+        <li>
+          <a style="cursor: pointer" (click)="onDeleteRecipe()"
+            >Delete Recipe</a
+          >
+        </li>
       </ul>
     </div>
   </div>
 </div>
-<div class="row">`
+<div class="row">
+  `
   <div class="col-xs-12">{{ recipe.description }}</div>
 </div>
 <div class="row">
