@@ -21,6 +21,8 @@ import { AuthComponent } from './auth/auth/auth.component';
 import { LoadingSpinnerComponent } from './Shared/loading-spinner/loading-spinner.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthInterceptor } from './auth/auth/auth.interceptor';
+import { AlertComponent } from './Shared/alert/alert.component';
+import { PlaceholderDirective } from './Shared/placeholder.directive';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,8 @@ import { AuthInterceptor } from './auth/auth/auth.interceptor';
     RecipeStartComponent,
     AuthComponent,
     LoadingSpinnerComponent,
+    AlertComponent,
+    PlaceholderDirective,
   ],
   imports: [
     BrowserModule,
@@ -51,5 +55,9 @@ import { AuthInterceptor } from './auth/auth/auth.interceptor';
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
+  // Ivy Engine 
+  // entryComponents : [
+  //   AlertComponent
+  // ]
 })
 export class AppModule {}
