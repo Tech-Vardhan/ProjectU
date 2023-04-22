@@ -1,4 +1,4 @@
-import { Component, Input, Output ,EventEmitter} from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-alert',
@@ -6,11 +6,10 @@ import { Component, Input, Output ,EventEmitter} from '@angular/core';
   styleUrls: ['./alert.component.css'],
 })
 export class AlertComponent {
-  @Input() message! : string;
+  @Input() message!: string;
   @Output() close = new EventEmitter<void>();
 
-  onClose(){
-    this.close.emit()
+  onClose() {
+    this.close.emit();
   }
-  
 }
