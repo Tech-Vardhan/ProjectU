@@ -2,7 +2,7 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Ingredient } from 'src/app/Shared/ingredient.model';
 import { ShopingListService } from '../shoping-list.service';
 import { NgForm } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, startWith } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as ShoppingListAction from 'src/app/shopping-list/store/shopping-list.action';
 import * as ShoppingListActions from 'src/app/shopping-list/store/shopping-list.action';
@@ -17,7 +17,6 @@ export class ShoppingEditComponent implements OnDestroy {
   @ViewChild('f') slForm!: NgForm;
   subscription!: Subscription;
   editMode: boolean = false;
-  editItemIndex!: number;
   editedItem!: Ingredient;
 
   constructor(
@@ -64,8 +63,8 @@ export class ShoppingEditComponent implements OnDestroy {
   }
   onDelete() {
     this.onClear();
-    // this.slService.deleteIngredients(this.editItemIndex);
     this.store.dispatch(new ShoppingListAction.DeleteIngredient());
+    // this.slService.deleteIngredients(this.editItemIndex);
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

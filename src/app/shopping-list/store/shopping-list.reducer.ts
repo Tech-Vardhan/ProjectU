@@ -13,7 +13,7 @@ export interface AppState {
 
 const initialState: State = {
   ingredients: [new Ingredient('tomato', 5), new Ingredient('potato', 5)],
-  editedIngredient: new Ingredient('', 0),
+  editedIngredient: null,
   editedIngredientIndex: -1,
 };
 
@@ -53,7 +53,7 @@ export function shoppingListReducer(state: State = initialState, action: any) {
       return {
         ...state,
         ingredients: state.ingredients.filter((ig, igIndex) => {
-          return igIndex !== action.editedIngredientIndex;
+          return igIndex !== state.editedIngredientIndex;
         }),
         editedIngredientIndex: -1,
         editedIngredient: null,
@@ -68,8 +68,8 @@ export function shoppingListReducer(state: State = initialState, action: any) {
     case ShoppingListAction.STOP_EDIT:
       return {
         ...state,
-        editedIngredient: null,
-        editedIngredientIndex: -1,
+        // editedIngredient: null,
+        // editedIngredientIndex: -1,
       };
     default: {
       return state;
