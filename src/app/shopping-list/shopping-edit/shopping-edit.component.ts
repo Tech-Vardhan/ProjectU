@@ -1,6 +1,5 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Ingredient } from 'src/app/Shared/ingredient.model';
-import { ShopingListService } from '../shoping-list.service';
 import { NgForm } from '@angular/forms';
 import { Subscription, startWith } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -20,7 +19,6 @@ export class ShoppingEditComponent implements OnDestroy {
   editedItem!: Ingredient;
 
   constructor(
-    private slService: ShopingListService,
     private store: Store<fromShoppingList.AppState>
   ) {}
 

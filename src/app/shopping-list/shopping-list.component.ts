@@ -1,6 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Ingredient } from '../Shared/ingredient.model';
-import { ShopingListService } from './shoping-list.service';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as fromShoppingList from './store/shopping-list.reducer';
@@ -17,7 +16,6 @@ export class ShoppingListComponent {
   private inChangSub!: Subscription;
 
   constructor(
-    private slService: ShopingListService,
     private store: Store<fromShoppingList.AppState>
   ) {}
   ngOnInit() {
