@@ -23,17 +23,42 @@ export interface AuthResponseData {
 export class AuthService {
   // user = new BehaviorSubject<User | any>(null);
   private tokenExpirationTimer: any;
-
+  
   constructor(
     private http: HttpClient,
     private router: Router,
     private store: Store<fromApp.AppState>
-  ) {}
-  login(email: string, password: string) {
-    return this.http
+    ) {}
+
+    signup(email: string, password: string) {
+      return this.http
+        .post<AuthResponseData>(
+          'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
+            environment.fireBaseApiKey,
+          {
+            email: email,
+            password: password,
+            returnSecuredToken: true,
+          }
+        )
+        .pipe(
+          catchError(this.handleError),
+          tap((resData) =>
+            this.handelAuthentication(
+              resData.email,
+              resData.localId,
+              resData.idToken,
+              +resData.expiresIn
+            )
+          )
+        );
+    }
+    
+    login(email: string, password: string) {
+      return this.http
       .post<AuthResponseData>(
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
-          environment.fireBaseApiKey,
+        environment.fireBaseApiKey,
         {
           email: email,
           password: password,
@@ -89,29 +114,6 @@ export class AuthService {
     }
   }
 
-  signup(email: string, password: string) {
-    return this.http
-      .post<AuthResponseData>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
-          environment.fireBaseApiKey,
-        {
-          email: email,
-          password: password,
-          returnSecuredToken: true,
-        }
-      )
-      .pipe(
-        catchError(this.handleError),
-        tap((resData) =>
-          this.handelAuthentication(
-            resData.email,
-            resData.localId,
-            resData.idToken,
-            +resData.expiresIn
-          )
-        )
-      );
-  }
 
   logout() {
     // this.user.next(null);
