@@ -54,6 +54,18 @@ export function authReducer(state = intialState, action: any) {
         loading: false,
       };
 
+    case AuthActions.SIGNUP_START:
+      return {
+        ...state,
+        authError: '',
+        loading: true,
+      };
+    case AuthActions.CLEAR_ERROR:
+      return {
+        ...state,
+        authError: '',
+      };
+
     default:
       return state;
   }

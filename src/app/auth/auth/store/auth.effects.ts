@@ -50,6 +50,39 @@ const handleError = (errorRes: any) => {
 
 @Injectable()
 export class AuthEffects {
+  authSignup = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.SIGNUP_START),
+      switchMap((signupAction: AuthActions.SignupStart) => {
+        return this.http
+          .post<AuthResponseData>(
+            'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
+              environment.fireBaseApiKey,
+            {
+              email: signupAction.payload.email,
+              password: signupAction.payload.password,
+              returnSecuredToken: true,
+            }
+          )
+          .pipe(
+            map((resData) => {
+              // const expirationDate = new Date(new Date().getTime() + (+resData.expiresIn * 1000));
+              const expirationDate = new Date(new Date().getTime() + 100000);
+              return handelAuthentication(
+                +resData.expiresIn,
+                resData.email,
+                resData.localId,
+                resData.idToken
+              );
+            }),
+            catchError((errorRes) => {
+              return handleError(errorRes);
+            })
+          );
+      })
+    )
+  );
+
   authLogin = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.LOGIN_START),
