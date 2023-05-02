@@ -23,42 +23,42 @@ export interface AuthResponseData {
 export class AuthService {
   // user = new BehaviorSubject<User | any>(null);
   private tokenExpirationTimer: any;
-  
+
   constructor(
     private http: HttpClient,
     private router: Router,
     private store: Store<fromApp.AppState>
-    ) {}
+  ) {}
 
-    signup(email: string, password: string) {
-      return this.http
-        .post<AuthResponseData>(
-          'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
-            environment.fireBaseApiKey,
-          {
-            email: email,
-            password: password,
-            returnSecuredToken: true,
-          }
-        )
-        .pipe(
-          catchError(this.handleError),
-          tap((resData) =>
-            this.handelAuthentication(
-              resData.email,
-              resData.localId,
-              resData.idToken,
-              +resData.expiresIn
-            )
+  signup(email: string, password: string) {
+    return this.http
+      .post<AuthResponseData>(
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
+          environment.fireBaseApiKey,
+        {
+          email: email,
+          password: password,
+          returnSecuredToken: true,
+        }
+      )
+      .pipe(
+        catchError(this.handleError),
+        tap((resData) =>
+          this.handelAuthentication(
+            resData.email,
+            resData.localId,
+            resData.idToken,
+            +resData.expiresIn
           )
-        );
-    }
-    
-    login(email: string, password: string) {
-      return this.http
+        )
+      );
+  }
+
+  login(email: string, password: string) {
+    return this.http
       .post<AuthResponseData>(
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
-        environment.fireBaseApiKey,
+          environment.fireBaseApiKey,
         {
           email: email,
           password: password,
@@ -98,7 +98,7 @@ export class AuthService {
     if (lodedUser.token) {
       // this.user.next(lodedUser);
       this.store.dispatch(
-        new AuthActions.Login({
+        new AuthActions.AuthenticationSuccess({
           email: lodedUser.email,
           userId: lodedUser.id,
           token: lodedUser.token,
@@ -113,7 +113,6 @@ export class AuthService {
       this.autoLogout(expirationDuration);
     }
   }
-
 
   logout() {
     // this.user.next(null);
@@ -146,7 +145,7 @@ export class AuthService {
     // this.user.next(user);
 
     this.store.dispatch(
-      new AuthActions.Login({
+      new AuthActions.AuthenticationSuccess({
         email: email,
         userId: userId,
         token: token,

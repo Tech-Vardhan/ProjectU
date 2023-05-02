@@ -35,7 +35,7 @@ export class AuthEffects {
             map((resData) => {
               // const expirationDate = new Date(new Date().getTime() + (+resData.expiresIn * 1000));
               const expirationDate = new Date(new Date().getTime() + 100000);
-              return new AuthActions.Login({
+              return new AuthActions.AuthenticationSuccess({
                 email: resData.email,
                 userId: resData.localId,
 
@@ -47,7 +47,7 @@ export class AuthEffects {
               let errorMessage = 'An Unknown error Occured!';
 
               if (!errorRes.error || !errorRes.error.error) {
-                return of(new AuthActions.LoginFail(errorMessage));
+                return of(new AuthActions.AuthencationFail(errorMessage));
               }
               switch (errorRes.error.error.message) {
                 case 'EMAIL_EXISTS':
@@ -60,7 +60,7 @@ export class AuthEffects {
                   errorMessage = 'The Password not correct';
                   break;
               }
-              return of(new AuthActions.LoginFail(errorMessage));
+              return of(new AuthActions.AuthencationFail(errorMessage));
             })
           );
       })
@@ -70,7 +70,7 @@ export class AuthEffects {
   authSuccess$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(AuthActions.LOGIN),
+        ofType(AuthActions.AUTHENTCATION_SUCCESS),
         tap(() => {
           this.router.navigate(['/']);
         })
