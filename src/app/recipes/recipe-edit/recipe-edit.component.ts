@@ -57,17 +57,16 @@ export class RecipeEditComponent {
       recipeName = recipe.name;
       recipeImagePath = recipe.imagePath;
       recipeDescription = recipe.description;
-      // if (recipe['ingredients']) {
-      //   var formArray = 
-        // for (let ingredient of recipe.ingredients) {
-        //   recipeIngredient.push(
-        //     new FormGroup({
-        //       name: new FormControl(ingredient.name),
-        //       amount: new FormControl(ingredient.amount),
-        //     })
-        //   );
-        // }
-      // }
+      if (recipe['ingredients']) {
+        for (let ingredient of recipe.ingredients) {
+          (<FormArray>(<unknown>recipeIngredient)).push(
+            new FormGroup({
+              name: new FormControl(ingredient.name),
+              amount: new FormControl(ingredient.amount),
+            })
+          );
+        }
+      }
     }
 
     this.recipeForm = new FormGroup({
