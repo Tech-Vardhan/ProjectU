@@ -15,6 +15,7 @@ import * as fromApp from '../../store/app.reducer';
 import * as AuthActions from './store/auth.actions';
 import { Store } from '@ngrx/store';
 
+
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',

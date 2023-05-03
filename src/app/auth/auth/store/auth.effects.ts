@@ -15,6 +15,7 @@ export interface AuthResponseData {
   localId: string;
   registered?: boolean;
 }
+
 const handelAuthentication = (
   expiresIn: number,
   email: string,
@@ -132,12 +133,48 @@ export class AuthEffects {
 
   authLogout$ = createEffect(
     () =>
+      this.actions$.pipe(
+        ofType(AuthActions.LOGOUT),
+        tap(() => {
+          localStorage.removeItem('userData');
+        })
+      ),
+    { dispatch: false }
+  );
+
+  autoLogin = createEffect(() =>
     this.actions$.pipe(
-      ofType(AuthActions.LOGOUT),
-      tap(() => {
-        localStorage.removeItem('userData');
+      ofType(AuthActions.AUTO_LOGIN),
+      map(() => {
+        const userDataString = localStorage.getItem('userData');
+        if (!userDataString) {
+          return { type: 'DUMMY' };
+        }
+
+        const userData: {
+          email: string;
+          id: string;
+          _token: string;
+          _tokenExpirationDate: string;
+        } = JSON.parse(userDataString);
+        const loadedUser = new User(
+          userData.email,
+          userData.id,
+          userData._token,
+          new Date(userData._tokenExpirationDate)
+        );
+
+        if (loadedUser.token) {
+          return new AuthActions.AuthenticationSuccess({
+            email: loadedUser.email,
+            userId: loadedUser.id,
+            token: loadedUser.token,
+            expirationDate: new Date(userData._tokenExpirationDate),
+          });
+        }
+        return { type: 'DUMMY' };
       })
-    ),{ dispatch: false}
+    )
   );
 
   constructor(
