@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from '../user.model';
 
 export interface AuthResponseData {
   idToken: string;
@@ -21,6 +22,8 @@ const handelAuthentication = (
   token: string
 ) => {
   const expirationDate = new Date(new Date().getTime() + 100000);
+  const user = new User(email, userId, token, expirationDate);
+  localStorage.setItem('userData', JSON.stringify(user));
   return new AuthActions.AuthenticationSuccess({
     email: email,
     userId: userId,
@@ -125,6 +128,16 @@ export class AuthEffects {
         })
       ),
     { dispatch: false }
+  );
+
+  authLogout$ = createEffect(
+    () =>
+    this.actions$.pipe(
+      ofType(AuthActions.LOGOUT),
+      tap(() => {
+        localStorage.removeItem('userData');
+      })
+    ),{ dispatch: false}
   );
 
   constructor(
