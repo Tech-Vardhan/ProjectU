@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../user.model';
+import { AuthService } from '../../auth.service';
 
 export interface AuthResponseData {
   idToken: string;
@@ -69,6 +70,9 @@ export class AuthEffects {
             }
           )
           .pipe(
+            tap((resData) => {
+              this._authService.setLogoutTimer(200000);
+            }),
             map((resData) => {
               // const expirationDate = new Date(new Date().getTime() + (+resData.expiresIn * 1000));
               const expirationDate = new Date(new Date().getTime() + 100000);
@@ -102,6 +106,9 @@ export class AuthEffects {
             }
           )
           .pipe(
+            tap((resData) => {
+              this._authService.setLogoutTimer(100000);
+            }),
             map((resData) => {
               // const expirationDate = new Date(new Date().getTime() + (+resData.expiresIn * 1000));
               const expirationDate = new Date(new Date().getTime() + 100000);
@@ -136,7 +143,9 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.LOGOUT),
         tap(() => {
+          this._authService.clearLogoutTimer();
           localStorage.removeItem('userData');
+          this.router.navigate(['/auth']);
         })
       ),
     { dispatch: false }
@@ -180,6 +189,7 @@ export class AuthEffects {
   constructor(
     private actions$: Actions,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private _authService: AuthService
   ) {}
 }
